@@ -56,6 +56,7 @@ public class Main {
         }
         */
 
+        /*
         for (rt = 0; rt < m; rt++) {
             sum += arr[rt];
             if (sum == n) {
@@ -67,6 +68,15 @@ public class Main {
                     answer++;
                 }
             }
+        }
+        */
+
+        int count = 1;
+        n--; // n - count
+        while (n > 0) {
+            count++;
+            n = n - count;
+            if (n % count == 0) answer++;
         }
 
         return answer;
