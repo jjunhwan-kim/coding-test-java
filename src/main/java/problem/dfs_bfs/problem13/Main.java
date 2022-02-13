@@ -1,5 +1,7 @@
 package problem.dfs_bfs.problem13;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner;
 
 /**
@@ -25,6 +27,15 @@ public class Main {
     private static int dx[] = {1, 1, 0, -1, -1, -1, 0, 1};
     private static int dy[] = {0, 1, 1, 1, 0, -1, -1, -1};
 
+    static class Point {
+        int x, y;
+
+        public Point(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
     public void dfs(int x, int y) {
         for (int i = 0; i < dx.length; i++) {
             int ny = dy[i] + y;
@@ -33,6 +44,25 @@ public class Main {
             if (map[ny][nx] == 1) {
                 map[ny][nx] = 0;
                 dfs(nx, ny);
+            }
+        }
+    }
+
+    public void bfs(int x, int y) {
+        Queue<Point> queue = new LinkedList<>();
+        map[y][x] = 0;
+        queue.offer(new Point(x, y));
+
+        while (!queue.isEmpty()) {
+            Point current = queue.poll();
+            for (int i = 0; i < dx.length; i++) {
+                int ny = dy[i] + current.y;
+                int nx = dx[i] + current.x;
+
+                if (map[ny][nx] == 1) {
+                    map[ny][nx] = 0;
+                    queue.offer(new Point(nx, ny));
+                }
             }
         }
     }
@@ -61,8 +91,9 @@ public class Main {
         for (int i = 1; i <= n; i++){
             for (int j = 1; j <= n; j++) {
                 if (map[i][j] == 1) {
-                    map[i][j] = 0;
-                    main.dfs(j, i);
+                    //map[i][j] = 0;
+                    //main.dfs(j, i);
+                    main.bfs(j, i);
                     answer++;
                 }
             }
