@@ -1,8 +1,6 @@
 package problem.greedy.problem07;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * 7. 원더랜드(최소스패닝트리)
@@ -30,6 +28,16 @@ public class Main {
         public Edge(int v1, int v2, int cost) {
             this.v1 = v1;
             this.v2 = v2;
+            this.cost = cost;
+        }
+    }
+
+    static class Node {
+        int vertex;
+        int cost;
+
+        public Node(int vertex, int cost) {
+            this.vertex = vertex;
             this.cost = cost;
         }
     }
@@ -79,6 +87,34 @@ public class Main {
         return answer;
     }
 
+    public int prim(int n, List<List<Node>> graph) {
+        int answer = 0;
+        int count = 0;
+        boolean[] visit = new boolean[n + 1];
+
+        Queue<Node> queue = new PriorityQueue<>((o1, o2) -> o1.cost - o2.cost);
+        queue.offer(new Node(1, 0));
+
+        while (!queue.isEmpty()) {
+            Node currentNode = queue.poll();
+            if (!visit[currentNode.vertex]) {
+                visit[currentNode.vertex] = true;
+                answer += currentNode.cost;
+                count++;
+                if (count == n) {
+                    break;
+                }
+
+                for (Node node : graph.get(currentNode.vertex)) {
+                    if (!visit[node.vertex]) {
+                        queue.offer(node);
+                    }
+                }
+            }
+        }
+        return answer;
+    }
+
     public static void main(String[] args){
         Main main = new Main();
         Scanner in = new Scanner(System.in);
@@ -88,14 +124,23 @@ public class Main {
 
         List<Edge> edges = new ArrayList<>();
 
+        List<List<Node>> graph = new ArrayList<>();
+
+        for (int i = 0; i <= v; i++) {
+            graph.add(new ArrayList<>());
+        }
+
         for (int i = 0; i < e; i++) {
             int v1 = in.nextInt();
             int v2 = in.nextInt();
             int cost = in.nextInt();
 
             edges.add(new Edge(v1, v2, cost));
+            graph.get(v1).add(new Node(v2, cost));
+            graph.get(v2).add(new Node(v1, cost));
         }
 
-        System.out.println(main.kruskal(v, edges));
+        //System.out.println(main.kruskal(v, edges));
+        System.out.println(main.prim(v, graph));
     }
 }
